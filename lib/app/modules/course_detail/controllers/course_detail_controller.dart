@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:study_material/app/data/models/modules_model.dart';
 import 'package:study_material/app/data/models/videos_model.dart';
+import 'package:study_material/app/modules/course_detail/bindings/course_detail_binding.dart';
 
 import '../../../data/api_service/api_constants.dart';
 import '../../../data/api_service/helper_service.dart';
@@ -62,7 +63,7 @@ class CourseDetailController extends GetxController {
         videosList.value = videosModelFromJson(response.data);
 
         isLoading.value = false;
-        Get.to(() => const ModuleDetails());
+        Get.to(() => const ModuleDetails(), binding: CourseDetailBinding());
       } else {}
     } catch (e) {
       log('Error: $e');

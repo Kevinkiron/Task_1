@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:study_material/utils/global.dart';
 import 'package:study_material/utils/kstyles.dart';
 
 import '../../../../utils/app_colors.dart';
@@ -30,6 +31,34 @@ class ModuleDetails extends GetView<CourseDetailController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Obx(
+                    () {
+                      if (controller.isLoading.value) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      final videoUrl =
+                          controller.videosList[index].videoUrl ?? "";
+
+                      if (videoUrl.contains('youtube.com') ||
+                          videoUrl.contains('youtu.be')) {
+                        return YouTubeVideoPlayer(videoUrl: videoUrl);
+                      } else if (videoUrl.contains('vimeo.com')) {
+                        return VimeoVideoPlayer(videoUrl: videoUrl);
+                      } else {
+                        return Center(
+                          child: Kstyles().reg(
+                            text: 'Unsupported video format',
+                            size: 15,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                10.height,
                 Kstyles().semiBold(
                     text: controller.videosList[index].title ?? "", size: 16),
                 Kstyles().light(
@@ -37,41 +66,6 @@ class ModuleDetails extends GetView<CourseDetailController> {
                   size: 12,
                   overflow: TextOverflow.visible,
                 ),
-                ExpansionTile(
-                    shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: AppColors.transparent),
-                        borderRadius: BorderRadius.circular(10)),
-                    tilePadding: EdgeInsets.zero,
-                    title: Kstyles().semiBold(
-                        text: "View Video", size: 14, color: AppColors.primary),
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.4,
-                        child: Obx(
-                          () {
-                            if (controller.isLoading.value) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
-
-                            final videoUrl =
-                                controller.videosList[index].videoUrl ?? "";
-
-                            if (videoUrl.contains('youtube.com') ||
-                                videoUrl.contains('youtu.be')) {
-                              return YouTubeVideoPlayer(videoUrl: videoUrl);
-                            } else if (videoUrl.contains('vimeo.com')) {
-                              return VimeoVideoPlayer(videoUrl: videoUrl);
-                            } else {
-                              return Center(
-                                  child: Kstyles().reg(
-                                      text: 'Unsupported video format',
-                                      size: 15));
-                            }
-                          },
-                        ),
-                      ),
-                    ]),
               ],
             ),
           );
@@ -85,7 +79,6 @@ class YouTubeVideoPlayer extends StatelessWidget {
   final String videoUrl;
 
   const YouTubeVideoPlayer({required this.videoUrl, super.key});
-
   @override
   Widget build(BuildContext context) {
     final videoId = YoutubePlayer.convertUrlToId(videoUrl) ?? "";
@@ -95,9 +88,13 @@ class YouTubeVideoPlayer extends StatelessWidget {
         flags: const YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
+          hideControls: false,
+          enableCaption: false,
         ),
       ),
       showVideoProgressIndicator: true,
+      aspectRatio: 16 / 9,
+      width: double.infinity,
     );
   }
 }

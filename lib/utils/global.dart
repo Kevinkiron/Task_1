@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'app_colors.dart';
 
 extension EmptySpace on num {
   SizedBox get height => SizedBox(height: toDouble());

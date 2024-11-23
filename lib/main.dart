@@ -15,9 +15,7 @@ void main() {
 }
 
 class Root extends StatelessWidget {
-  const Root({
-    super.key,
-  });
+  const Root({super.key});
 
   @override
   Widget build(BuildContext context) {
